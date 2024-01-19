@@ -1,37 +1,37 @@
 #include "sort.h"
-
 /**
- * selection_sort - Sorts an array of integers in ascending order
- * using the Selection Sort algorithm.
- * @array: The array to be sorted
- * @size: The size of the array
+ * selection_sort - sort an array of integers using selection sort
+ *
+ * @array: the array to order
+ * @size: the siz of the array to order
  */
 void selection_sort(int *array, size_t size)
 {
-    size_t i, j, min_idx;
-    int temp;
+	unsigned long int i = 0, j = 0, smallest = 0;
+	int *swap = NULL;
 
-    if (array == NULL || size < 2)
-        return;
-
-    for (i = 0; i < size - 1; i++)
-    {
-        min_idx = i;
-
-        for (j = i + 1; j < size; j++)
-        {
-            if (array[j] < array[min_idx])
-                min_idx = j;
-        }
-
-        if (min_idx != i)
-        {
-            /* Swap array[i] and array[min_idx] */
-            temp = array[i];
-            array[i] = array[min_idx];
-            array[min_idx] = temp;
-
-            print_array(array, size);
-        }
-    }
+	if (!array || size < 2)
+		return;
+	for (; i < size; i++)
+	{
+		smallest = i; /* set current as minimum */
+		swap =  malloc(sizeof(int) * 1);
+		*swap = *(array + i);
+		for (j = i + 1; j < size; j++)
+		{
+			if (*(array + j) < *(array + smallest))
+			{
+				smallest = j; /* update minimum index*/
+			}
+		}
+		if (i < smallest)
+		{
+		*(array + i) = *(array + smallest);
+		*(array + smallest) = *swap;
+		free(swap);
+		print_array(array, size);
+		}
+		else
+			free(swap);
+	}
 }
