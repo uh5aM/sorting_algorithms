@@ -1,59 +1,48 @@
 #include "sort.h"
-/*
-* 88 88b 88 .dP"Y8 888888 88""Yb 888888 88  dP"Yb  88b 88
-* 88 88Yb88 `Ybo." 88__   88__dP   88   88 dP   Yb 88Yb88
-* 88 88 Y88 o.`Y8b 88""   88"Yb    88   88 Yb   dP 88 Y88
-* 88 88  Y8 8bodP' 888888 88  Yb   88   88  YbodP  88  Y8
-*/
-void move_left(listint_t *curr, listint_t *insertion, listint_t **head);
-/**
- * insertion_sort_list - sort a doubly linked list of integer
- * in ascending order
- * @list: pointer to the head of the doubly linked list
- */
 
+/**
+ * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
+ * @h: A pointer to the head of the doubly-linked list.
+ * @n1: A pointer to the first node to swap.
+ * @n2: The second node to swap.
+ */
+void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
+{
+	(*n1)->next = n2->next;
+	if (n2->next != NULL)
+		n2->next->prev = *n1;
+	n2->prev = (*n1)->prev;
+	n2->next = *n1;
+	if ((*n1)->prev != NULL)
+		(*n1)->prev->next = n2;
+	else
+		*h = n2;
+	(*n1)->prev = n2;
+	*n1 = n2->prev;
+}
+
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers
+ *                       using the insertion sort algorithm.
+ * @list: A pointer to the head of a doubly-linked list of integers.
+ *
+ * Description: Prints the list after each swap.
+ */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *curr = NULL;
-	listint_t *insertion = NULL;
+	listint_t *iter, *insert, *tmp;
 
 	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
 
-	curr = (*list)->next;
-	insertion = curr->prev;
-	while (curr != NULL)
+	for (iter = (*list)->next; iter != NULL; iter = tmp)
 	{
-		insertion = curr->prev;
-		while (insertion != NULL && insertion->n > curr->n)
+		tmp = iter->next;
+		insert = iter->prev;
+		while (insert != NULL && iter->n < insert->n)
 		{
-			move_left(curr, insertion, list);
-			insertion = curr->prev;
+			swap_nodes(list, &insert, iter);
+			print_list((const listint_t *)*list);
 		}
-		curr = curr->next;
 	}
-}
-/**
-* move_left - swaps two members of a list
-*
-* @curr: current node to be moved at left of insertion
-* @insertion: insertion pointer
-* @head: head of list
-*/
-void move_left(listint_t *curr, listint_t *insertion, listint_t **head)
-{
-	listint_t *swap1 = curr->next;
-	listint_t *swap2 = insertion->prev;
-
-	if (swap1 != NULL)
-		swap1->prev = insertion;
-	if (swap2 != NULL)
-		swap2->next = curr;
-	curr->prev = swap2;
-	insertion->next = swap1;
-	curr->next = insertion;
-	insertion->prev = curr;
-	if (*head == insertion)
-		*head = curr;
-	print_list(*head);
 }
